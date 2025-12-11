@@ -1,0 +1,223 @@
+# 🖥️ INSTRUÇÕES EXATAS PARA POWERSHELL
+
+## ⚡ COPIE E COLE (Não precisa digitar!)
+
+---
+
+## PASSO 1: Abrir .env no Notepad
+
+**COPIE EXATAMENTE ISTO NO POWERSHELL:**
+
+```powershell
+notepad C:\Users\Trampo\Downloads\ChamaeledePlataformaX\bet_analysis_platform-2\.env
+```
+
+**PRESSIONE ENTER**
+
+Você verá uma janela do Notepad abrir com:
+
+```
+TELEGRAM_BOT_TOKEN=8347334478:AAHGap7AeSEWG1vPG1OyRjg4wHNgCCFbAjg
+TELEGRAM_CHANNEL_ID=770356893
+BLAZE_API_URL=https://api.blaze.com
+ANALYSIS_INTERVAL_MINUTES=5
+MIN_CONFIDENCE_LEVEL=0.65
+...
+```
+
+---
+
+## PASSO 2: Trocar o Chat ID
+
+**NO NOTEPAD:**
+
+1. Use `Ctrl+H` para "Find and Replace" (Localizar e Substituir)
+2. Ou manualmente:
+   - Procure por: `TELEGRAM_CHANNEL_ID=770356893`
+   - Troque o número `770356893` pelo que o script mostrou
+
+**EXEMPLO:**
+
+Se o script mostrou: `Chat ID: 123456789`
+
+Então troque:
+```
+TELEGRAM_CHANNEL_ID=770356893
+```
+
+Para:
+```
+TELEGRAM_CHANNEL_ID=123456789
+```
+
+---
+
+## PASSO 3: Salvar e Fechar
+
+**NO NOTEPAD:**
+
+1. Pressione: `Ctrl+S` (para salvar)
+2. Feche a janela (X no canto)
+
+---
+
+## PASSO 4: Executar o Programa
+
+**VOLTA AO POWERSHELL:**
+
+**COPIE EXATAMENTE ISTO:**
+
+```powershell
+.\venv\Scripts\python.exe src/main.py
+```
+
+**PRESSIONE ENTER**
+
+Você verá:
+
+```
+[OK] Bot do Telegram inicializado
+[*] Coletando dados...
+[OK] Double: 20 registros coletados
+[*] Analisando padrões...
+[*] Gerando sinais...
+[*] Enviando 1 sinal(is) para Telegram...
+[*] Total de sinais enviados: 1/1
+[OK] Ciclo de análise concluído com sucesso
+```
+
+**E você receberá uma mensagem no Telegram!** 🎉
+
+---
+
+## 🚀 PARA RODAR CONTINUAMENTE
+
+**COPIE ISTO:**
+
+```powershell
+.\venv\Scripts\python.exe src/main.py --scheduled
+```
+
+**PRESSIONE ENTER**
+
+A cada 5 minutos, você receberá atualizações no Telegram.
+
+**Para parar:** Pressione `Ctrl+C`
+
+---
+
+## 📋 RESUMO DE COMANDOS
+
+```powershell
+# Abrir .env
+notepad .env
+
+# Executar uma vez
+.\venv\Scripts\python.exe src/main.py
+
+# Executar continuamente (a cada 5 min)
+.\venv\Scripts\python.exe src/main.py --scheduled
+
+# Executar a cada 10 minutos
+.\venv\Scripts\python.exe src/main.py --scheduled --interval 10
+
+# Ver logs em tempo real
+Get-Content logs/bet_analysis.log -Wait
+
+# Validar credenciais
+.\venv\Scripts\python.exe .\scripts\validate_telegram_env.py
+
+# Obter Chat ID (de novo)
+.\venv\Scripts\python.exe get_chat_id.py
+```
+
+---
+
+## ⚠️ IMPORTANTE
+
+### Certifique-se de:
+
+1. **Estar no diretório correto:**
+   ```
+   C:\Users\Trampo\Downloads\ChamaeledePlataformaX\bet_analysis_platform-2
+   ```
+
+2. **Virtual environment ativo:**
+   - Se não, execute:
+   ```powershell
+   .\venv\Scripts\Activate.ps1
+   ```
+
+3. **Bot no Telegram iniciado:**
+   - Procure seu bot
+   - Envie `/start`
+   - Envie uma mensagem
+
+4. **.env atualizado:**
+   - Chat ID deve ser o correto
+   - Token do bot deve estar certo
+
+---
+
+## 🔍 VERIFICAR O PROGRESSO
+
+### Ver os últimos 50 linhas de log:
+
+```powershell
+Get-Content logs/bet_analysis.log -Tail 50
+```
+
+### Ver logs em tempo real (enquanto roda):
+
+```powershell
+Get-Content logs/bet_analysis.log -Wait
+```
+
+### Pressione Ctrl+C para parar
+
+---
+
+## 🆘 SE ALGO DER ERRADO
+
+### "Arquivo não encontrado"
+```powershell
+# Certifique-se de estar no diretório certo
+cd C:\Users\Trampo\Downloads\ChamaeledePlataformaX\bet_analysis_platform-2
+ls .env  # Deve mostrar .env
+```
+
+### "Chat not found"
+```powershell
+# Volte e execute get_chat_id.py novamente
+.\venv\Scripts\python.exe get_chat_id.py
+# Copie o Chat ID correto e atualize .env
+```
+
+### "Permission denied"
+```powershell
+# Tente executar como administrador ou:
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+---
+
+## 📝 PRÓXIMAS VEZES
+
+Depois que tudo estiver funcionando, execute simplesmente:
+
+```powershell
+# Para rodar uma vez por dia:
+.\venv\Scripts\python.exe src/main.py
+
+# Para rodar continuamente:
+.\venv\Scripts\python.exe src/main.py --scheduled
+```
+
+---
+
+## ✅ PRONTO!
+
+Você tem todos os comandos necessários. Basta copiar e colar!
+
+**Agora abra seu Telegram e comece!** 📱
+

@@ -1,0 +1,90 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║                  ⚠️ IMPORTANTE: REINICIE O SISTEMA                            ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+
+PROBLEMA:
+═════════
+Você está vendo sinais no formato antigo:
+
+  [CRASH] ALERTA DE SINAL - Crash
+  Sinal: Preto
+  Descricao: Sinal: Preto | Confianca: 97.9% | Estrategias: 3/6
+
+
+CAUSA:
+══════
+O sistema ainda está executando a versão antiga do código.
+As melhorias já foram aplicadas, mas o processo precisa ser reiniciado.
+
+
+SOLUÇÃO:
+════════
+
+1. PARE O SISTEMA ATUAL
+   ────────────────────
+   No terminal onde o sistema está rodando:
+   Pressione: Ctrl + C
+
+2. INICIE O SISTEMA NOVAMENTE
+   ──────────────────────────
+   Dê duplo clique em:
+   EXECUTAR_SISTEMA.bat
+
+   OU execute no terminal:
+   venv\Scripts\python.exe src\main.py --scheduled --interval 1
+
+
+DEPOIS DO RESTART:
+══════════════════
+
+Os sinais virão no NOVO formato:
+
+  ╔════════════════════════════════════════╗
+  ║     🎮 ALERTA DE SINAL - CRASH 🎮      ║
+  ╚════════════════════════════════════════╝
+  
+  ⚫ PREVISÃO: Preto
+  
+  📊 ANÁLISE:
+     Confiança: 🔥 MUITO ALTA (97.9%)
+     Estratégias: 3/6 validadas
+     Multiplicador esperado: 1.5x - 2.5x
+  
+  ⏰ TIMING:
+     Horário: 01:35:21
+     Data: 11/12/2025
+  
+  💡 RECOMENDAÇÃO:
+     • Comece com aposta pequena
+     • Controle seu risco
+     • Máximo 5% de seu bankroll
+  
+  ⚠️ DISCLAIMER:
+  Apostas envolvem risco alto. Jogue responsavelmente.
+
+
+MELHORIAS JÁ IMPLEMENTADAS:
+════════════════════════════
+✅ Bordas visuais profissionais
+✅ Emojis contextualizados (🎮 Crash, 🎲 Double)
+✅ Seções organizadas (Previsão, Análise, Timing, Recomendação)
+✅ Diferenciação por jogo (Crash vs Double)
+✅ Recomendação de aposta (% do bankroll baseado em confiança)
+✅ Emojis de confiança (🔥 Muito Alta, ✅ Alta, ⚠️ Moderada)
+✅ Data e hora completas
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PASSOS PARA REINICIAR:
+
+1. Vá ao terminal onde o sistema está rodando
+2. Pressione Ctrl + C para parar
+3. Execute: EXECUTAR_SISTEMA.bat
+4. Aguarde o próximo sinal
+5. Veja a diferença! 🚀
+
+═══════════════════════════════════════════════════════════════════════════════

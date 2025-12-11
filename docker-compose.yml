@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    container_name: bet_app
+    env_file: .env
+    environment:
+      PYTHONUNBUFFERED: "1"
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # Tier 1 - Kelly Criterion + Drawdown Manager
+      KELLY_BANKROLL: ${KELLY_BANKROLL:-1000.0}
+      KELLY_FRACTION: ${KELLY_FRACTION:-0.25}
+      MAX_DRAWDOWN_PERCENT: ${MAX_DRAWDOWN_PERCENT:-5.0}
+    command: python -u src/main.py --scheduled
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ./.env:/app/.env:ro
+    ports:
+      - "8000:8000"
+    restart: always
+    healthcheck:
+      test: ["CMD", "python", "scripts/healthcheck.py", "--max-age", "120"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      - exporter
+
+  exporter:
+    build: .
+    container_name: bet_exporter
+    command: python -u scripts/prometheus_exporter.py
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    ports:
+      - "8001:8000"
+    restart: always
+    environment:
+      PYTHONUNBUFFERED: "1"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/metrics"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

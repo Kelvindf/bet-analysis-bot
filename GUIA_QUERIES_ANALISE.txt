@@ -1,0 +1,331 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    GUIA DE QUERIES - ANÁLISE DE DADOS
+              Consultas diretas para análise histórica no banco de dados
+═══════════════════════════════════════════════════════════════════════════════
+
+Arquivo: data/db/analysis.db
+Tabela: game_results
+
+═══════════════════════════════════════════════════════════════════════════════
+1. QUERIES SQL DIRETAS (via SQLite)
+═══════════════════════════════════════════════════════════════════════════════
+
+CONECTAR AO BANCO (Windows PowerShell):
+───────────────────────────────────────
+
+  sqlite3 data/db/analysis.db
+
+DEPOIS EXECUTE AS QUERIES ABAIXO:
+
+═══════════════════════════════════════════════════════════════════════════════
+ANÁLISE BÁSICA
+═══════════════════════════════════════════════════════════════════════════════
+
+1. TOTAL DE REGISTROS
+──────────────────────
+
+  SELECT COUNT(*) as total FROM game_results;
+
+  Resultado: Quantos registros você tem
+
+2. DISTRIBUIÇÃO POR JOGO
+─────────────────────────
+
+  SELECT game, COUNT(*) as total 
+  FROM game_results 
+  GROUP BY game;
+
+  Resultado:
+    Crash    | 1200
+    Double   | 1200
+
+3. DISTRIBUIÇÃO DE RESULTADOS (Double)
+────────────────────────────────────────
+
+  SELECT result, COUNT(*) as total, 
+    ROUND(100.0 * COUNT(*) / (SELECT COUNT(*) FROM game_results WHERE game='Double'), 1) as pct
+  FROM game_results 
+  WHERE game='Double' 
+  GROUP BY result
+  ORDER BY total DESC;
+
+  Resultado:
+    Vermelho | 598 | 49.8%
+    Preto    | 602 | 50.2%
+
+4. DISTRIBUIÇÃO DE MULTIPLICADORES (Crash)
+────────────────────────────────────────────
+
+  SELECT 
+    COUNT(*) as total,
+    MIN(price) as minimo,
+    MAX(price) as maximo,
+    ROUND(AVG(price), 2) as media,
+    ROUND(SQRT(AVG(price * price) - AVG(price) * AVG(price)), 2) as desvio_padrao
+  FROM game_results 
+  WHERE game='Crash' AND price IS NOT NULL;
+
+  Resultado:
+    Informações estatísticas dos multiplicadores Crash
+
+═══════════════════════════════════════════════════════════════════════════════
+ANÁLISE POR HORA
+═══════════════════════════════════════════════════════════════════════════════
+
+5. RESULTADOS POR HORA DO DIA
+──────────────────────────────
+
+  SELECT 
+    CAST(strftime('%H', timestamp) AS INTEGER) as hora,
+    game,
+    COUNT(*) as total,
+    SUM(CASE WHEN signal_matched=1 THEN 1 ELSE 0 END) as acertos,
+    ROUND(100.0 * SUM(CASE WHEN signal_matched=1 THEN 1 ELSE 0 END) / COUNT(*), 1) as pct_acerto
+  FROM game_results
+  WHERE signal_id IS NOT NULL
+  GROUP BY hora, game
+  ORDER BY hora, game;
+
+  Resultado:
+    00 | Double | 100 | 65 | 65.0%
+    00 | Crash  | 100 | 48 | 48.0%
+    01 | Double | 98  | 62 | 63.3%
+    ...
+
+═══════════════════════════════════════════════════════════════════════════════
+ANÁLISE DE SINAIS
+═══════════════════════════════════════════════════════════════════════════════
+
+6. TAXA DE ACERTO GERAL (com sinais)
+──────────────────────────────────────
+
+  SELECT 
+    COUNT(*) as total_com_sinal,
+    SUM(CASE WHEN signal_matched=1 THEN 1 ELSE 0 END) as acertos,
+    ROUND(100.0 * SUM(CASE WHEN signal_matched=1 THEN 1 ELSE 0 END) / COUNT(*), 1) as pct_acerto
+  FROM game_results
+  WHERE signal_id IS NOT NULL;
+
+  Resultado:
+    200 | 120 | 60.0%
+
+7. TAXA DE ACERTO POR JOGO (com sinais)
+─────────────────────────────────────────
+
+  SELECT 
+    game,
+    COUNT(*) as total_com_sinal,
+    SUM(CASE WHEN signal_matched=1 THEN 1 ELSE 0 END) as acertos,
+    ROUND(100.0 * SUM(CASE WHEN signal_matched=1 THEN 1 ELSE 0 END) / COUNT(*), 1) as pct_acerto
+  FROM game_results
+  WHERE signal_id IS NOT NULL
+  GROUP BY game;
+
+  Resultado:
+    Crash  | 100 | 48 | 48.0%
+    Double | 100 | 72 | 72.0%
+
+8. RESULTADOS SEM SINAL (para análise)
+────────────────────────────────────────
+
+  SELECT 
+    COUNT(*) as total_sem_sinal,
+    game,
+    result,
+    ROUND(AVG(odds), 2) as odds_media
+  FROM game_results
+  WHERE signal_id IS NULL
+  GROUP BY game, result
+  ORDER BY game, result;
+
+  Resultado: Padrões que não geraram sinal
+
+═══════════════════════════════════════════════════════════════════════════════
+ANÁLISE AVANÇADA
+═══════════════════════════════════════════════════════════════════════════════
+
+9. SEQUÊNCIAS DE CORES (Double últimas 20 jogadas)
+────────────────────────────────────────────────────
+
+  SELECT 
+    GROUP_CONCAT(result, '') as sequencia,
+    COUNT(*) as total
+  FROM (
+    SELECT result 
+    FROM game_results 
+    WHERE game='Double'
+    ORDER BY timestamp DESC 
+    LIMIT 20
+  )
+  GROUP BY 1;
+
+  Resultado: Sequência de cores para análise de padrão
+
+10. DIAS COM MELHOR PERFORMANCE
+────────────────────────────────
+
+  SELECT 
+    DATE(timestamp) as data,
+    COUNT(*) as total_com_sinal,
+    SUM(CASE WHEN signal_matched=1 THEN 1 ELSE 0 END) as acertos,
+    ROUND(100.0 * SUM(CASE WHEN signal_matched=1 THEN 1 ELSE 0 END) / COUNT(*), 1) as pct
+  FROM game_results
+  WHERE signal_id IS NOT NULL
+  GROUP BY DATE(timestamp)
+  ORDER BY pct DESC;
+
+  Resultado:
+    2025-12-13 | 200 | 130 | 65.0%
+    2025-12-12 | 200 | 115 | 57.5%
+
+11. CORRELAÇÃO RESULTADO × SIGNAL (validar estratégias)
+─────────────────────────────────────────────────────────
+
+  SELECT 
+    game,
+    result,
+    SUM(CASE WHEN signal_matched=1 THEN 1 ELSE 0 END) as acertos,
+    COUNT(*) as total,
+    ROUND(100.0 * SUM(CASE WHEN signal_matched=1 THEN 1 ELSE 0 END) / COUNT(*), 1) as pct
+  FROM game_results
+  WHERE signal_id IS NOT NULL
+  GROUP BY game, result
+  ORDER BY pct DESC;
+
+  Resultado:
+    Double | Vermelho | 40 | 50 | 80.0%
+    Double | Preto    | 32 | 50 | 64.0%
+    Crash  | Preto    | 25 | 50 | 50.0%
+
+═══════════════════════════════════════════════════════════════════════════════
+2. QUERIES PYTHON (em script)
+═══════════════════════════════════════════════════════════════════════════════
+
+Usar no seu código Python:
+
+```python
+from database import GameResultRepository, init_db
+
+Session = init_db()
+repo = GameResultRepository(Session)
+
+# Método 1: Taxa de acerto
+metrics = repo.get_win_rate_by_game('Double', hours=24)
+print(f"Win Rate: {metrics['win_rate']:.1%}")
+print(f"Wins: {metrics['wins']}/{metrics['total']}")
+
+# Método 2: Resultados recentes
+results = repo.get_results_by_timeframe('Double', hours=24)
+for r in results[:5]:
+    print(f"{r['timestamp']} - {r['result']} ({r['price']}x)")
+
+# Método 3: Correlação sinal-resultado
+result = repo.get_by_signal('sig_a3f2e8c9b1d4')
+if result:
+    print(f"Sinal acertou: {result['signal_matched']}")
+    print(f"Resultado: {result['result']}")
+
+# Método 4: Dados não analisados (para ML)
+unanalyzed = repo.get_unanalyzed(limit=1000)
+for item in unanalyzed[:5]:
+    print(f"{item['game']} - {item['result']} (analyzed: {item['raw_data']})")
+
+# Método 5: Atualizar análise
+repo.update_analysis('result_id', {'modelo': 'ML', 'confianca': 0.85})
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+3. ANÁLISE RÁPIDA RECOMENDADA
+═══════════════════════════════════════════════════════════════════════════════
+
+APÓS 1 DIA DE COLETA (~12k registros):
+
+1. Execute query #2 (Distribuição por jogo)
+   └─ Verificar se está coletando ambos
+
+2. Execute query #3 e #4 (Distribuição de resultados)
+   └─ Verificar se cores/multiplicadores são aleatórios
+
+3. Execute query #6 (Taxa de acerto geral)
+   └─ Verificar performance geral
+
+APÓS 3 DIAS (~40k registros):
+
+4. Execute query #7 (Taxa por jogo)
+   └─ Qual jogo tem melhor taxa?
+
+5. Execute query #5 (Por hora)
+   └─ Qual hora do dia melhor?
+
+6. Execute query #11 (Correlação resultado × signal)
+   └─ Qual padrão tem melhor taxa?
+
+APÓS 1 SEMANA (~100k registros):
+
+7. Execute query #10 (Dias melhor performance)
+   └─ Tendência ao longo do tempo
+
+8. Execute query #9 (Sequências)
+   └─ Há padrões repetitivos?
+
+9. Execute todos os Métodos Python
+   └─ Análise completa para otimização
+
+═══════════════════════════════════════════════════════════════════════════════
+4. INTERPRETAÇÃO DE RESULTADOS
+═══════════════════════════════════════════════════════════════════════════════
+
+Win Rate > 55%
+  ✓ Melhor que sorte pura (50%)
+  ✓ Pode ser lucrativo com Kelly Criterion
+  ✓ Aumentar confiança
+  
+Win Rate > 60%
+  ✓ Muito bom
+  ✓ Estratégia está funcionando
+  ✓ Maximizar bet size
+  
+Win Rate > 65%
+  ✓ Excelente
+  ✓ Potencial de +20-30% de lucro
+  ✓ Clonar estratégia para outra moeda
+
+Win Rate < 50%
+  ✗ Pior que sorte pura
+  ✗ Estratégia está falhando
+  ✗ Revisar ou desabilitar
+
+═══════════════════════════════════════════════════════════════════════════════
+5. EXPORTAR DADOS PARA ANÁLISE EXTERNA
+═══════════════════════════════════════════════════════════════════════════════
+
+Exportar para CSV (análise em Excel/Python):
+
+  sqlite3 data/db/analysis.db
+  .headers on
+  .mode csv
+  .output resultados.csv
+  SELECT * FROM game_results WHERE timestamp > datetime('now', '-7 days');
+  .quit
+
+Depois:
+  
+  import pandas as pd
+  df = pd.read_csv('resultados.csv')
+  
+  # Análise
+  df.groupby('game')['signal_matched'].mean()  # Win rate por jogo
+  df.groupby('result').size()  # Distribuição
+  etc.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PRÓXIMAS AÇÕES:
+
+1. ✓ Sistema rodando (hoje)
+2. ▶ Executar queries 1-3 em 1 dia (validação)
+3. ▶ Executar queries 5-7 em 3 dias (análise)
+4. ▶ Executar todas em 1 semana (otimização)
+5. ▶ Implementar melhoria com maior ROI (PLANO_MELHORIAS_ESTRATEGIAS.md)
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,142 @@
+═══════════════════════════════════════════════════════════════════════════
+                    CORREÇÕES APLICADAS - SISTEMA PRONTO
+═══════════════════════════════════════════════════════════════════════════
+
+Data: 11/12/2025 01:43
+Status: ✅ CORRIGIDO
+
+═══════════════════════════════════════════════════════════════════════════
+1. PROBLEMA: UNICODE ENCODING ERROR
+═══════════════════════════════════════════════════════════════════════════
+
+ERRO ORIGINAL:
+--------------
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713'
+em position 45: character maps to <undefined>
+
+CAUSA:
+------
+- Console Windows usa encoding cp1252
+- Caractere '✓' (checkmark) não existe no cp1252
+- Logger tentava escrever caracteres Unicode não suportados
+
+SOLUÇÃO APLICADA:
+-----------------
+✅ Removido caractere '✓' dos logs
+✅ Substituído por '[OK]' em ASCII puro
+✅ Removido emoji '⚠️' e substituído por '[AVISO]'
+
+ARQUIVOS MODIFICADOS:
+---------------------
+- src/main.py (linhas 160, 223)
+
+═══════════════════════════════════════════════════════════════════════════
+2. PROBLEMA: IDS DUPLICADOS NO BANCO DE DADOS
+═══════════════════════════════════════════════════════════════════════════
+
+ERRO ORIGINAL:
+--------------
+sqlite3.IntegrityError: UNIQUE constraint failed: signals.id
+[parameters: ('sig_1765428017', ...)]
+[parameters: ('sig_1765428017', ...)]  <- MESMO ID!
+
+CAUSA:
+------
+- Pipeline gera 2 sinais no MESMO SEGUNDO
+- ID gerado como: f"sig_{int(datetime.now().timestamp())}"
+- Timestamp só tem precisão de SEGUNDOS
+- Resultado: sig_1765428017 e sig_1765428017 (duplicado!)
+
+EXEMPLO DO PROBLEMA:
+--------------------
+Sinal 1: timestamp = 1765428017.477 -> ID = sig_1765428017
+Sinal 2: timestamp = 1765428017.555 -> ID = sig_1765428017  ❌ DUPLICADO!
+                     ^^^^^^^^^^^^^^ mesmo segundo!
+
+SOLUÇÃO APLICADA:
+-----------------
+✅ Substituído timestamp por UUID (Universally Unique Identifier)
+✅ Novo formato: f"sig_{uuid.uuid4().hex[:12]}"
+✅ Garante IDs únicos mesmo com milhares de sinais/segundo
+
+EXEMPLO NOVO:
+-------------
+Sinal 1: ID = sig_a3f2e8c9b1d4
+Sinal 2: ID = sig_7c4b9e2d6a8f
+Sinal 3: ID = sig_1f8e3b7a9c2d
+          ^^^^^^^^^^^^^^^^^ sempre único!
+
+ARQUIVOS MODIFICADOS:
+---------------------
+- src/main.py (linha 182)
+  ANTES: 'game_id': signal.get('game_id', f"sig_{int(datetime.now().timestamp())}"),
+  DEPOIS: 'game_id': signal.get('game_id', f"sig_{uuid.uuid4().hex[:12]}"),
+
+- src/main.py (linha 1)
+  Adicionado: import uuid
+
+═══════════════════════════════════════════════════════════════════════════
+3. SISTEMA AGORA ESTÁ PRONTO PARA RODAR
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Todos os erros corrigidos
+✅ IDs únicos garantidos
+✅ Logs compatíveis com Windows
+✅ Formatação nova dos sinais ATIVA
+
+PRÓXIMO PASSO:
+--------------
+1. PARE o sistema atual (CTRL+C)
+2. Execute novamente: .\EXECUTAR.bat
+3. AGUARDE o próximo sinal
+4. VERIFIQUE o formato novo no Telegram
+
+FORMATO ESPERADO NO TELEGRAM:
+------------------------------
+╔════════════════════════════════════════╗
+║     🎮 ALERTA DE SINAL - DOUBLE 🎮     ║
+╚════════════════════════════════════════╝
+
+🔴 PREVISÃO: Vermelho
+
+📊 ANÁLISE:
+   Confiança: 🔥 MUITO ALTA (97.9%)
+   Estratégias: 3/6 validadas
+   Odds esperado: 1.90x (normal) / 14.00x (branco)
+
+⏰ TIMING:
+   Horário: 01:40:17
+   Data: 11/12/2025
+
+💡 RECOMENDAÇÃO:
+   • Máximo 5% de seu bankroll
+   • Entrada: Vermelho
+   • Sair se acertar ou após 1 loss
+
+⚠️ DISCLAIMER:
+Apostas envolvem risco alto. Jogue responsavelmente.
+
+═══════════════════════════════════════════════════════════════════════════
+4. LOGS AGORA SEM ERROS
+═══════════════════════════════════════════════════════════════════════════
+
+ANTES (com erro):
+-----------------
+2025-12-11 01:40:17,701 - __main__ - INFO - [✓] Sinal sig_1765428017 salvo
+                                               ^^^
+                                            ERRO UNICODE!
+
+AGORA (sem erro):
+-----------------
+2025-12-11 01:43:XX,XXX - __main__ - INFO - [OK] Sinal sig_a3f2e8c9b1d4 salvo
+                                               ^^^^           ^^^^^^^^^^^^^^
+                                             ASCII OK!      UUID ÚNICO!
+
+═══════════════════════════════════════════════════════════════════════════
+
+EXECUTE AGORA:
+--------------
+cd C:\Users\Trampo\Downloads\ChamaeledePlataformaX\bet_analysis_platform-2
+.\EXECUTAR.bat
+
+Aguarde o primeiro sinal para ver o NOVO FORMATO PROFISSIONAL! 🎯

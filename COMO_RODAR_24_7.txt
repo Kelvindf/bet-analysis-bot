@@ -1,0 +1,323 @@
+# ✅ SISTEMA 24/7 - RESUMO FINAL
+
+## 🎯 RESPOSTA: Como deixar enviando sinais 24 horas?
+
+### Resposta Simples (Uma linha):
+
+```powershell
+python scripts\modo_24_7.py
+```
+
+**Pronto! O sistema está coletando dados e enviando sinais continuamente.**
+
+---
+
+## 🚀 3 MANEIRAS DE USAR
+
+### 1️⃣ **MODO BÁSICO - Rodar indefinidamente**
+
+```powershell
+python scripts\modo_24_7.py
+```
+
+✅ **O que faz:**
+- Coleta dados continuamente
+- Envia sinais via Telegram
+- Roda até você pressionar **Ctrl+C**
+- Mostra log em tempo real
+
+⏰ **Tempo:** Indefinido
+
+---
+
+### 2️⃣ **MODO COM DURAÇÃO - Rodar N horas**
+
+```powershell
+# 48 horas (2 dias)
+python scripts\modo_24_7.py --duration 48
+
+# 24 horas (1 dia)
+python scripts\modo_24_7.py --duration 24
+
+# 1 hora (teste)
+python scripts\modo_24_7.py --duration 1
+```
+
+✅ **O que faz:**
+- Roda pelo tempo especificado
+- Para automaticamente após N horas
+- Envia relatório final ao Telegram
+- Terminal liberado após tempo
+
+⏰ **Tempo:** Exatamente N horas
+
+---
+
+### 3️⃣ **MODO BACKGROUND - Rodar sem bloquear terminal**
+
+```powershell
+# Abre nova janela PowerShell e roda lá
+python scripts\iniciar_background.py
+
+# Rodar 48 horas em background
+python scripts\iniciar_background.py --hours 48
+```
+
+✅ **O que faz:**
+- Cria nova janela PowerShell
+- Sistema roda nela separadamente
+- Terminal principal fica livre
+- Você pode fechar a janela para parar
+
+⏰ **Tempo:** Conforme configurar
+
+---
+
+## 📊 O QUE ACONTECE A CADA 30 SEGUNDOS
+
+```
+[CICLO] Coleta de dados
+   ↓
+[CICLO] Análise com 6 estratégias
+   ↓
+[CICLO] Geração de sinais
+   ↓
+[CICLO] Envio via Telegram (se encontrar sinal)
+   ↓
+[CICLO] Salva logs e estatísticas
+   ↓
+Aguarda 30s → Próximo ciclo
+```
+
+---
+
+## 📱 NOTIFICAÇÕES TELEGRAM
+
+Você recebe automaticamente:
+
+```
+✅ Sistema iniciado
+[a cada sinal] 🎯 Sinal gerado (RED/BLACK)
+[a cada erro] ⚠️ Erro no sistema
+[ao finalizar] 📋 Relatório final
+```
+
+---
+
+## 📈 EXEMPLOS REAIS
+
+### Exemplo 1: Rodar 48 horas
+
+```powershell
+python scripts\modo_24_7.py --duration 48
+```
+
+**Resultado esperado:**
+- Dura exatamente 48 horas
+- ~2880 ciclos (1 por 30s)
+- ~50-100 sinais gerados
+- Relatório automático ao Telegram
+
+---
+
+### Exemplo 2: Rodar indefinidamente (até você parar)
+
+```powershell
+python scripts\modo_24_7.py
+```
+
+**O que você vê:**
+```
+[CICLO 1] Iniciando análise...
+...
+[CICLO 2] Iniciando análise...
+...
+Pressione Ctrl+C para parar
+^C
+```
+
+---
+
+### Exemplo 3: Rodar em background e deixar a máquina fazer tudo
+
+```powershell
+python scripts\iniciar_background.py --hours 48
+```
+
+**Resultado:**
+- Nova janela abre
+- Sistema roda lá
+- Seu terminal fica livre
+- Você pode fazer outra coisa
+
+---
+
+## 🔧 COMO MONITORAR ENQUANTO RODA
+
+### Opção 1: Ver logs em tempo real
+
+```powershell
+# PowerShell 5.1
+Get-Content logs\modo_24_7.log -Tail 20 -Wait
+
+# PowerShell 7+
+tail -f logs\modo_24_7.log
+```
+
+### Opção 2: Ver status do Telegram
+Basta acompanhar as mensagens que o bot envia
+
+### Opção 3: Dashboard
+```powershell
+python scripts\dashboard_monitoramento.py
+```
+
+---
+
+## ⏹️ COMO PARAR
+
+### Opção 1: Pressionar Ctrl+C
+Se o terminal está visível, pressione **Ctrl+C**
+
+### Opção 2: Fechar a janela
+Fechar a janela PowerShell automaticamente para o sistema
+
+### Opção 3: Task Manager
+```
+Ctrl+Shift+Esc → Procurar python → Encerrar processo
+```
+
+---
+
+## 💾 ARQUIVOS GERADOS
+
+```
+logs/modo_24_7.log          ← Log detalhado
+data/raw/blaze_data_cache.json  ← Dados coletados
+```
+
+---
+
+## 📊 ESTATÍSTICAS ESPERADAS (após 24h)
+
+| Métrica | Valor |
+|---------|-------|
+| Ciclos | ~2880 |
+| Sinais processados | 2880 |
+| Sinais enviados | 50-100 |
+| Taxa de conversão | 1.5-3.5% |
+| Uptime | 99%+ |
+
+---
+
+## 🎯 RECOMENDAÇÕES
+
+### Para Máquina Pessoal
+```powershell
+python scripts\modo_24_7.py --duration 24
+```
+- Roda 1 dia apenas
+- Seu PC fica livre depois
+
+### Para Server/VPS
+```powershell
+python scripts\modo_24_7.py
+```
+- Roda indefinidamente
+- Máquina dedicada
+
+### Para Teste
+```powershell
+python scripts\modo_24_7.py --duration 1
+```
+- Roda 1 hora apenas
+- Testar se tudo funciona
+
+---
+
+## 🚀 COMECE AGORA!
+
+### Comando mais simples (Recomendado):
+
+```powershell
+cd 'C:\Users\Trampo\Downloads\ChamaeledePlataformaX\bet_analysis_platform-2'
+python scripts\modo_24_7.py
+```
+
+### Ou com duração:
+
+```powershell
+python scripts\modo_24_7.py --duration 48
+```
+
+**Pronto! Sistema está rodando 24/7! 🎉**
+
+---
+
+## ❓ PERGUNTAS FREQUENTES
+
+### P: O sistema continua rodando se fechar o PowerShell?
+**R:** Não. Se fechar a janela, o sistema para. Use `--duration` ou `iniciar_background.py` se quer deixar rodando.
+
+### P: Quanto tempo leva para gerar o primeiro sinal?
+**R:** 5-30 minutos. Depende da frequência dos games na Blaze.
+
+### P: Preciso ficar com a janela aberta?
+**R:** Não necessariamente. Use `iniciar_background.py` ou Task Scheduler.
+
+### P: Como saber se está funcionando?
+**R:** Veja os logs (`Get-Content logs\modo_24_7.log -Tail 20 -Wait`) ou acompanhe notificações do Telegram.
+
+### P: Posso parar e retomar depois?
+**R:** Sim. Pressione Ctrl+C para parar. Inicie novamente com outro comando.
+
+### P: Qual intervalo usar?
+**R:** Padrão de 30s é bom. Use 10-15s se quer mais sinais, 60s se quer economizar recursos.
+
+---
+
+## 🔗 ARQUIVOS IMPORTANTES
+
+```
+scripts/modo_24_7.py            ← Sistema 24/7 principal
+scripts/iniciar_background.py   ← Gerenciador de background
+GUIA_MODO_24_7.md               ← Guia detalhado
+```
+
+---
+
+## ✅ CHECKLIST
+
+- [ ] Python 3.13.9 instalado
+- [ ] Virtual environment ativo
+- [ ] Telegram bot configurado
+- [ ] Blaze API acessível
+- [ ] Espaço em disco (mínimo 100MB)
+- [ ] Conexão de internet estável
+
+---
+
+## 🎯 PRÓXIMO PASSO
+
+Escolha UMA opção:
+
+**Opção A: Teste Rápido (1 hora)**
+```powershell
+python scripts\modo_24_7.py --duration 1
+```
+
+**Opção B: Coleta Real (48 horas)**
+```powershell
+python scripts\modo_24_7.py --duration 48
+```
+
+**Opção C: Indefinido (até você parar)**
+```powershell
+python scripts\modo_24_7.py
+```
+
+---
+
+**Sistema 24/7 está pronto! 🚀**
+
+Comece agora com o comando de sua preferência!

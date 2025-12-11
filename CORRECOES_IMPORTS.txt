@@ -1,0 +1,44 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║                     ✅ CORREÇÕES APLICADAS - IMPORTS                          ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+PROBLEMA IDENTIFICADO:
+━━━━━━━━━━━━━━━━━━━━━
+ModuleNotFoundError: No module named 'data_collection.result_tracker'
+
+CAUSA:
+━━━━━━
+O arquivo result_tracker.py estava em src/analysis/, mas estava sendo importado
+de data_collection/__init__.py e tracking/ no main.py
+
+CORREÇÕES APLICADAS:
+━━━━━━━━━━━━━━━━━━━━
+
+1. ✅ src/data_collection/__init__.py
+   Removido import incorreto de result_tracker
+
+2. ✅ src/main.py
+   Corrigido import de:
+     from tracking.result_tracker import ResultTracker
+   Para:
+     from analysis.result_tracker import ResultTracker
+
+3. ✅ src/core/types.py
+   Adicionado campo bet_size no Signal:
+     bet_size: float = 0.0  # Tamanho da aposta recomendada
+
+
+STATUS ATUAL:
+━━━━━━━━━━━━━
+✅ Imports corrigidos
+✅ Signal com campo bet_size
+✅ Pronto para executar
+
+PRÓXIMO PASSO:
+━━━━━━━━━━━━━━
+Execute novamente:
+  python src/main.py --scheduled --interval 1
+
+Sistema deve iniciar sem erros!
