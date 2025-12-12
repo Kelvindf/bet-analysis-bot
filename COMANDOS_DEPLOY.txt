@@ -1,0 +1,46 @@
+========================================
+  COMANDOS PARA EXECUTAR APÓS LOGIN
+========================================
+
+ATENÇÃO: Execute estes comandos UM POR UM após ver "Logged in as kelvinvitorsantos7@gmail.com"
+
+# 1. Ir para o diretório
+cd "c:\Users\Trampo\Downloads\ChamaeledePlataformaX\bet_analysis_platform-2"
+
+# 2. Criar app no Heroku
+heroku create bet-analysis-bot-live
+
+# 3. Adicionar PostgreSQL (pode demorar 1-2 min)
+heroku addons:create heroku-postgresql:essential-0
+
+# 4. Configurar Telegram Bot Token
+heroku config:set TELEGRAM_BOT_TOKEN="8260416435:AAH7aPa8eL8bYG0051IPyulUXqmaetFxrzQ"
+
+# 5. Configurar Telegram Channel ID
+heroku config:set TELEGRAM_CHANNEL_ID="8329919168"
+
+# 6. Configurar Kelly Criterion
+heroku config:set KELLY_BANKROLL="1000.0"
+heroku config:set KELLY_FRACTION="0.25"
+heroku config:set MAX_DRAWDOWN_PERCENT="5.0"
+
+# 7. Configurar Python
+heroku config:set PYTHONUNBUFFERED="1"
+
+# 8. Fazer deploy (pode demorar 3-5 min)
+git push heroku main
+
+# 9. Iniciar worker 24/7
+heroku ps:scale worker=1
+
+# 10. Ver logs em tempo real
+heroku logs --tail
+
+========================================
+PRONTO! Bot rodando 24/7 na nuvem!
+========================================
+
+Para parar os logs: Ctrl+C (o bot continua rodando)
+Para ver status: heroku ps
+Para reiniciar: heroku restart
+Para parar: heroku ps:scale worker=0
