@@ -1,0 +1,23 @@
+services:
+  - type: worker
+    name: bet-analysis-bot
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python src/main.py --scheduled --interval 1
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        value: 8260416435:AAH7aPa8eL8bYG0051IPyulUXqmaetFxrzQ
+      - key: TELEGRAM_CHANNEL_ID
+        value: 8329919168
+      - key: KELLY_BANKROLL
+        value: 1000.0
+      - key: KELLY_FRACTION
+        value: 0.25
+      - key: MAX_DRAWDOWN_PERCENT
+        value: 5.0
+      - key: PYTHONUNBUFFERED
+        value: 1
+      - key: PYTHON_VERSION
+        value: 3.11.0
