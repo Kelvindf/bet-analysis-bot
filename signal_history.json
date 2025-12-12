@@ -1,0 +1,26 @@
+{
+  "signals": [
+    {
+      "game": "🎰 Crash",
+      "entry": "2.0",
+      "stop": "1.5",
+      "confidence": 87,
+      "timestamp": "2025-12-12T02:30:42.054897",
+      "pattern": "normal",
+      "momentum": "neutral",
+      "bankroll_status": "➡️  Estável"
+    },
+    {
+      "game": "🎰 Double",
+      "entry": "2.0",
+      "stop": "2.0",
+      "confidence": 89,
+      "timestamp": "2025-12-12T02:31:47.790914",
+      "pattern": "normal",
+      "momentum": "neutral",
+      "bankroll_status": "➡️  Estável"
+    }
+  ],
+  "bankroll": 99.96,
+  "last_update": "2025-12-12T02:32:01.333927"
+}
