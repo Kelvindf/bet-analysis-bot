@@ -1,0 +1,20 @@
+app = "bet-analysis-bot"
+primary_region = "gig"
+kill_signal = "SIGINT"
+kill_timeout = 5
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PYTHONUNBUFFERED = "1"
+  TELEGRAM_CHANNEL_ID = "8329919168"
+  KELLY_BANKROLL = "1000.0"
+  KELLY_FRACTION = "0.25"
+  MAX_DRAWDOWN_PERCENT = "5.0"
+
+[processes]
+  worker = "python src/main.py --scheduled --interval 1"
+
+[experimental]
+  auto_rollback = true
